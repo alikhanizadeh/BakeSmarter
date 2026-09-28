@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string name="app_name">BakeSmarter</string>
+
+
+    <!-- Settings screen -->
+    <string name="settings_title">تنظیمات</string>
+    <string name="back">بازگشت</string>
+    <string name="section_application">برنامه</string>
+
+    <!-- Language row -->
+    <string name="language_label">زبان</string>
+
+    <!-- Theme row -->
+    <string name="theme_label">تم</string>
+    <string name="theme_light">روشن</string>
+    <string name="theme_dark">تاریک</string>
+    <string name="theme_system">سیستم</string>
+
+    <!-- Change-language confirmation dialog -->
+    <string name="change_language_title">تغییر زبان؟</string>
+    <string name="change_language_message">تغییر زبان برنامه نیاز به بسته و باز شدن دوباره اپ دارد. برنامه اکنون بسته می‌شود — لطفاً دوباره بازش کنید تا زبان جدید اعمال شود.</string>
+    <string name="action_change">تغییر</string>
+    <string name="action_cancel">انصراف</string>
+
+    <!-- Profile section -->
+    <string name="edit_name_cd">ویرایش نام</string>
+    <string name="change_photo_cd">تغییر عکس</string>
+    <string name="default_avatar_cd">آواتار پیش‌فرض</string>
+
+    <!-- Product item screen -->
+    <string name="edit_ingredients">ویرایش مواد اولیه</string>
+    <string name="stat_cost_label">هزینه</string>
+    <string name="stat_price_label">قیمت</string>
+    <string name="donut_chart_title">سهم هزینهٔ مواد اولیه</string>
+    <string name="donut_total_cost">هزینهٔ کل</string>
+
+    <!-- Create / edit recipe screen -->
+    <string name="new_recipe_title">دستور پخت جدید</string>
+    <string name="edit_recipe_title">ویرایش دستور پخت</string>
+    <string name="product_name_placeholder">نام محصول</string>
+    <string name="selling_price_placeholder">قیمت فروش</string>
+    <string name="ingredients_title">مواد اولیه</string>
+    <string name="ingredients_new">مواد اولیه جدید</string>
+    <string name="ingredients_name">نام</string>
+    <string name="ingredients_seve">ذخیره</string>
+    <string name="ingredient_cost_format">هزینه: $%.2f</string>
+    <string name="ingredient_name_input">برای مثال آرد</string>
+    <string name="ingredient_UnitOfMeasurement">واحد اندازه‌گیری</string>
+    <string name="Rial">ريال</string>
+    <string name="Kilogram_kg">کیلوگرم (kg)</string>
+    <string name="Gram_g">گرم (g)</string>
+    <string name="Liter_L">لیتر (L)</string>
+    <string name="Milliliter_ml">میلی‌لیتر (ml)</string>
+    <string name="Piece">قطعه</string>
+    <string name="Cost_per_Unit">هزینه هر واحد</string>
+    <string name="My_Products">محصولات من</string>
+    <string name="last_updated">آخرین به‌روزرسانی</string>
+    <string name="placeholder">جستجو بر اساس نام، سخنران یا موضوع</string>
+    <string name="wellcome_screen">ساده‌ترین روش برای تعیین قیمت دقیق و بی‌نقص شیرینی‌هایتان.</string>
+    <string name="wellcome_Button">شروع کنید</string>
+    <string name="EditRecipe">ویرایش دستور پخت</string>
+    <string name="NewRecipe">دستور پخت جدید</string>
+    <string name="CreateRecipe_name">نام محصول</string>
+    <string name="CreateRecipe_Price">قیمت فروش</string>
+    <string name="CreateRecipe_Cost">هزینه کل دستور پخت:</string>
+    <string name="Add_Ingredient">افزودن ماده اولیه</string>
+    <string name="Confirm">تأیید</string>
+    <string name="Ingredient_Cost_Contribution">سهم هزینه مواد اولیه</string>
+
+
+    <!-- Shared currency formats -->
+    <string name="currency_format">$%.2f</string>
+
+</resources>
