@@ -27,6 +27,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -34,7 +35,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberAsyncImagePainter
+import coil.request.CachePolicy
+import coil.request.ImageRequest
+
 private val AccentCaramel = Color(0xFFE07A2F)
 private val AccentCaramelLight = Color(0xFFF4A65A)
 private val CardDark = Color(0xFF241B14)
@@ -107,11 +112,20 @@ fun ProfileSection(
                     contentAlignment = Alignment.Center
                 ) {
                     if (photoUri != null) {
-                        Image(
-                            painter = rememberAsyncImagePainter(photoUri),
+                        SubcomposeAsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(photoUri)
+                                .crossfade(true)
+                                .build(),
                             contentDescription = "Profile photo",
-                            modifier = Modifier.fillMaxSize().clip(CircleShape),
-                            contentScale = ContentScale.Crop
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop,
+                            // جلوگیری از چشمک زدن هنگام Recompose
+                            loading = {
+                                // می‌توان یک Placeholder ساده گذاشت یا خالی رها کرد
+                            }
                         )
                     } else {
                         Icon(

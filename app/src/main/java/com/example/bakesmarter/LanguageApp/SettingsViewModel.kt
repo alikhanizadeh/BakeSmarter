@@ -85,26 +85,30 @@ class SettingsViewModel(
      */
     fun changePhoto(sourceUri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
-            val destinationFile = File(context.filesDir, "profile_photo.jpg")
+            // ایجاد نام منحصربه‌فرد برای فایل بر اساس زمان
+            val fileName = "profile_photo_${System.currentTimeMillis()}.jpg"
+            val destinationFile = File(context.filesDir, fileName)
 
             try {
+                // ۱. پاک کردن عکس‌های قبلی پروفایل برای جلوگیری از پر شدن حافظه
+                context.filesDir.listFiles()?.forEach { file ->
+                    if (file.name.startsWith("profile_photo_")) {
+                        file.delete()
+                    }
+                }
+
+                // ۲. کپی عکس جدید
                 context.contentResolver.openInputStream(sourceUri)?.use { input ->
                     destinationFile.outputStream().use { output ->
                         input.copyTo(output)
                     }
-                } ?: android.util.Log.e(
-                    "SettingsViewModel",
-                    "openInputStream returned null for uri=$sourceUri"
-                )
+                }
             } catch (e: Exception) {
-                android.util.Log.e(
-                    "SettingsViewModel",
-                    "Failed to copy profile photo from $sourceUri",
-                    e
-                )
+                android.util.Log.e("SettingsViewModel", "Failed to copy photo", e)
                 return@launch
             }
 
+            // ۳. ذخیره مسیر جدید در DataStore (چون مسیر تغییر کرده Flow انتشار می‌یابد)
             dataStore.edit { preferences ->
                 preferences[AppPreferences.PHOTO_PATH_KEY] = destinationFile.absolutePath
             }

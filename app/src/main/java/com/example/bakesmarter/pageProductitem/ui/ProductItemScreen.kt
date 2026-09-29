@@ -45,8 +45,7 @@ fun ProductItemScreen(
     if (product == null) {
         Box(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 30.dp),
+                .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()
@@ -65,53 +64,58 @@ fun ProductItemScreen(
         )
     }
 
-    Scaffold(
-        containerColor = background,
-        topBar = {
-            CostTopBar(
-                title = product.name,
-                onBack = onBack,
-                isDark = isDark
-            )
-        },
-        bottomBar = {
-            BottomActionBar(
-                isDark = isDark,
-                onEditClick = {
-                    onEditIngredients(product.id) }
-            )
-        }
-    ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(padding)
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
+    Box(modifier = Modifier.fillMaxSize()
+        .padding(top = 30.dp)) {
 
-            // نمایش مقدار هزینه و مقدار سود
-            item {
-                StatsSection(
+        Scaffold(
+            containerColor = background,
+            topBar = {
+                CostTopBar(
+                    title = product.name,
+                    onBack = onBack,
+                    isDark = isDark
+                )
+            },
+            bottomBar = {
+                BottomActionBar(
                     isDark = isDark,
-                    cost = product.cost,
-                    price = product.price
+                    onEditClick = {
+                        onEditIngredients(product.id)
+                    }
                 )
             }
+        ) { padding ->
+            LazyColumn(
+                modifier = Modifier
+                    .padding(padding)
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
 
-            // نمایش سهم هزینه مواد استفاده‌شده با نمودار
-            item {
-                IngredientDonutChart(
-                    isDark = isDark,
-                    ingredients = uiState.ingredients
-                )
+                // نمایش مقدار هزینه و مقدار سود
+                item {
+                    StatsSection(
+                        isDark = isDark,
+                        cost = product.cost,
+                        price = product.price
+                    )
+                }
+
+                // نمایش سهم هزینه مواد استفاده‌شده با نمودار
+                item {
+                    IngredientDonutChart(
+                        isDark = isDark,
+                        ingredients = uiState.ingredients
+                    )
+                }
+
+                // مواد استفاده‌شده در محصول مورد نظر
+                items(ingredients) {
+                    IngredientRow(it, isDark)
+                }
+
+                item { androidx.compose.foundation.layout.Spacer(Modifier.height(96.dp)) }
             }
-
-            // مواد استفاده‌شده در محصول مورد نظر
-            items(ingredients) {
-                IngredientRow(it, isDark)
-            }
-
-            item { androidx.compose.foundation.layout.Spacer(Modifier.height(96.dp)) }
         }
     }
 }

@@ -59,7 +59,6 @@ fun MyProductsScreen(
 ) {
     val background = if (isDark) BackgroundDark else BackgroundLight
     val textColor = if (isDark) TextDark else TextLight
-    var showFullSearch by remember { mutableStateOf(false) }
 
 
     Box(
@@ -71,28 +70,18 @@ fun MyProductsScreen(
         Scaffold(
             containerColor = background,
             topBar = {
-                if (!showFullSearch){
-                    TopAppBar(
-                        title = {
-                            Text(
-                                text = stringResource(R.string.My_Products),
-                                fontWeight = FontWeight.Bold
-                            )
-                        },
-                        actions = {
-                            IconButton(onClick = { showFullSearch = true }) {
-                                Icon(
-                                    imageVector = Icons.Default.Search,
-                                    contentDescription = "Search"
-                                )
-                            }
-                        },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = background.copy(alpha = 0.9f),
-                            titleContentColor = textColor
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = stringResource(R.string.My_Products),
+                            fontWeight = FontWeight.Bold
                         )
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = background.copy(alpha = 0.9f),
+                        titleContentColor = textColor
                     )
-                }
+                )
             }
         ) { padding ->
 
@@ -102,17 +91,17 @@ fun MyProductsScreen(
                     .fillMaxSize()
             ) {
 
-                // سرچ تمام صفحه
-                AnimatedVisibility(
-                    visible = showFullSearch,
-                    enter = fadeIn(tween(300)) + slideInVertically(tween(300)) { -it },
-                    exit = fadeOut(tween(300)) + slideOutVertically(tween(300)) { -it }
-                ) {
-                    FullScreenSearch(
-                        onDismiss = { showFullSearch = false },
-                        onSearch = { /* بعداً */ }
-                    )
-                }
+//                // سرچ تمام صفحه
+//                AnimatedVisibility(
+//                    visible = showFullSearch,
+//                    enter = fadeIn(tween(300)) + slideInVertically(tween(300)) { -it },
+//                    exit = fadeOut(tween(300)) + slideOutVertically(tween(300)) { -it }
+//                ) {
+//                    FullScreenSearch(
+//                        onDismiss = { showFullSearch = false },
+//                        onSearch = { /* بعداً */ }
+//                    )
+//                }
 
 
                 /* 🔹 لیست محصولات */
