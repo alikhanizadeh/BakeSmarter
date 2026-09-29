@@ -19,6 +19,7 @@ import com.example.bakesmarter.LanguageApp.SettingsViewModel
 import com.example.bakesmarter.LanguageApp.ThemeMode
 import com.example.bakesmarter.R
 import com.example.bakesmarter.SettingScreen.*
+import com.example.bakesmarter.components.ButtonNavGlass.GlassBottomNavigation
 import com.example.bakesmarter.components.ButtonNavigation.BottomNav
 import com.example.bakesmarter.ui.theme.BackgroundDark
 import com.example.bakesmarter.ui.theme.BackgroundLight
@@ -27,7 +28,6 @@ import kotlin.system.exitProcess
 @Composable
 fun SettingsScreen(
     isDark: Boolean,
-    navController: NavController,
     onBack: () -> Unit,
     settingsViewModel: SettingsViewModel,
     onLanguageChanged: () -> Unit
@@ -57,7 +57,8 @@ fun SettingsScreen(
     val context = LocalContext.current
     val activity = context as? Activity
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize()
+        .padding(top = 30.dp)) {
 
         Scaffold(
             topBar = { SettingsTopBar(isDark, onBack) },
@@ -106,13 +107,6 @@ fun SettingsScreen(
             }
         }
 
-        BottomNav(
-            isDark = isDark,
-            navController = navController,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 20.dp)
-        )
     }
 
     // دیالوگ تأیید: چون تغییر زبان ساختار اپ رو عوض می‌کنه، کاربر باید

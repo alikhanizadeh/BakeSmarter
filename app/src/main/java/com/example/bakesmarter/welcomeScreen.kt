@@ -33,7 +33,6 @@ import com.example.bakesmarter.ui.theme.TextMutedLight
 fun WelcomeScreen(
     isDark: Boolean,
     onGetStartedClick: () -> Unit,
-    onSignInClick: () -> Unit,
 ) {
     val background = if (isDark) BackgroundDark else BackgroundLight
     val textColor = if (isDark) TextDark else TextLight
@@ -142,7 +141,6 @@ fun GreetingPreview() {
         WelcomeScreen(
             true,
             {},
-            {}
         )
     }
 }

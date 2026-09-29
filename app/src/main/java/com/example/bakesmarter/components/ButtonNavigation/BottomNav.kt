@@ -12,7 +12,6 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -204,15 +203,15 @@ fun BottomNav(
 }
 
 
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingNavigation() {
-    BottomNav(
-        true,
-        rememberNavController(),
-        modifier = Modifier
-        .padding(bottom = 20.dp)
-    )
-}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun GreetingNavigation() {
+//    BottomNav(
+//        true,
+//        rememberNavController(),
+//        modifier = Modifier
+//        .padding(bottom = 20.dp)
+//    )
+//}
 

@@ -100,8 +100,10 @@ fun CreateRecipeScreen(
                 .fillMaxSize()
                 .background(Color.Black.copy(alpha = 0.25f))
                 .blur(18.dp)
+                .padding(top = 30.dp)
         } else {
             Modifier.fillMaxSize()
+                .padding(top = 30.dp)
         }
     ) {
 

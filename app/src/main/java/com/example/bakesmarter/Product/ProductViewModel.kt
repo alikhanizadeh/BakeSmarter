@@ -7,6 +7,7 @@ import com.example.bakesmarter.data.local.product.ProductEntity
 import com.example.bakesmarter.data.repository.ProductRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -20,6 +21,25 @@ class ProductViewModel(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = emptyList()
         )
+
+
+    // داخل ProductViewModel
+    val uiProducts: StateFlow<List<ProductUiModel>> = products.map { list ->
+        list.map { product ->
+            ProductUiModel(
+                id = product.id,
+                name = product.name,
+                lastUpdated = product.lastUpdated,
+                imageUrl = product.imageResId,
+                cost = "$%.2f".format(product.cost),
+                price = "$%.2f".format(product.price)
+            )
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
 
     fun getProduct(productId: Long): StateFlow<ProductEntity?> {
         return repository.getProductById(productId).stateIn(

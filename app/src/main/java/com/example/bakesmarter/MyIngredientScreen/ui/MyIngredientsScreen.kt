@@ -10,17 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.bakesmarter.MyIngredientScreen.IngredientItem
 import com.example.bakesmarter.MyIngredientScreen.IngredientViewModel
-import com.example.bakesmarter.MyIngredientScreen.MyIngredientModel
 import com.example.bakesmarter.MyIngredientScreen.MyIngredientsTopBar
-import com.example.bakesmarter.R
-import com.example.bakesmarter.components.ButtonNavigation.BottomNav
 import com.example.bakesmarter.ui.theme.BackgroundDark
 import com.example.bakesmarter.ui.theme.BackgroundLight
 import androidx.compose.runtime.collectAsState
@@ -29,7 +25,6 @@ import androidx.compose.runtime.getValue
 @Composable
 fun MyIngredientsScreen(
     isDark: Boolean,
-    navController: NavController,
     ingredientViewModel: IngredientViewModel
 ) {
 
@@ -40,6 +35,7 @@ fun MyIngredientsScreen(
 
     Box(
         modifier = Modifier.fillMaxSize()
+            .padding(top = 30.dp)
     ) {
 
         Scaffold(
@@ -80,31 +76,7 @@ fun MyIngredientsScreen(
                 }
             }
         }
-
-
-        /* 🔹 Bottom Navigation شناور */
-        BottomNav(
-            isDark = isDark,
-            navController = navController,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 20.dp)
-        )
-
     }
 }
 
 
-
-//@Preview(showBackground = true)
-//@Composable
-//fun Greeting() {
-//    val navController = rememberNavController()
-//    BakeSmarterTheme {
-//
-//        MyIngredientsScreen(
-//            false,
-//            navController = navController
-//        )
-//    }
-//}

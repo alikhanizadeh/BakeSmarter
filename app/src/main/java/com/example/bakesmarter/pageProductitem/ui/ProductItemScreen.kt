@@ -2,7 +2,6 @@ package com.example.bakesmarter.pageProductitem.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -12,9 +11,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.bakesmarter.R
 import com.example.bakesmarter.pageProductitem.BottomActionBar
 import com.example.bakesmarter.pageProductitem.CostTopBar
 import com.example.bakesmarter.pageProductitem.IngredientDonutChart
@@ -24,9 +21,6 @@ import com.example.bakesmarter.pageProductitem.ProductItemViewModel
 import com.example.bakesmarter.pageProductitem.StatsSection
 import com.example.bakesmarter.ui.theme.BackgroundDark
 import com.example.bakesmarter.ui.theme.BackgroundLight
-import com.example.bakesmarter.ui.theme.BakeSmarterTheme
-import com.example.bakesmarter.ui.theme.TextDark
-import com.example.bakesmarter.ui.theme.TextLight
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -51,7 +45,8 @@ fun ProductItemScreen(
     if (product == null) {
         Box(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(top = 30.dp),
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()
@@ -120,17 +115,3 @@ fun ProductItemScreen(
         }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun Greeting() {
-//    BakeSmarterTheme {
-//        ProductItemScreen(
-//            true,
-//            list,
-//            {}
-//        )
-//    }
-//}
-
-

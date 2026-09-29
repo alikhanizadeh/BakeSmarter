@@ -18,7 +18,19 @@ import androidx.navigation.compose.rememberNavController
 import com.example.bakesmarter.Product.ProductUiModel
 import com.example.bakesmarter.AddIngredientScreen.AddIngredientScreen
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import com.example.bakesmarter.CreateProductScreen.CreateRecipeViewModel
 import com.example.bakesmarter.CreateProductScreen.CreateRecipeViewModelFactory
@@ -49,8 +61,10 @@ import com.example.bakesmarter.data.repository.ProductItemRepository
 import com.example.bakesmarter.pageProductitem.ProductItemViewModel
 import com.example.bakesmarter.pageProductitem.ProductItemViewModelFactory
 import androidx.navigation.NavType
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.example.bakesmarter.CreateProductScreen.CreateRecipeScreen
+import com.example.bakesmarter.components.ButtonNavGlass.GlassBottomNavigation
 
 
 class MainActivity : ComponentActivity() {
@@ -224,26 +238,6 @@ fun AppRoot() {
             )
         }
     }
-
-
-    // ==========================================
-    // Apply Theme
-    // ==========================================
-
-    BakeSmarterTheme(
-        darkTheme = isDarkTheme,
-        dynamicColor = false
-    ) {
-        MainNavHost(
-            isDarkTheme = isDarkTheme,
-            settingsViewModel = settingsViewModel,
-            productViewModel = productViewModel,
-            ingredientViewModel = ingredientViewModel,
-            createRecipeViewModel = createRecipeViewModel,
-            productItemRepository = productItemRepository
-            // سایر پارامترهای فعلی
-        )
-    }
 }
 
 
@@ -257,203 +251,147 @@ fun MainNavHost(
     settingsViewModel: SettingsViewModel,
     productViewModel: ProductViewModel,
     ingredientViewModel: IngredientViewModel,
-    createRecipeViewModel : CreateRecipeViewModel,
+    createRecipeViewModel: CreateRecipeViewModel,
     productItemRepository: ProductItemRepository
 ) {
-
-    val context = LocalContext.current
     val navController = rememberNavController()
-    val products by productViewModel.products.collectAsState()
+    val uiProducts by productViewModel.uiProducts.collectAsState()
 
-    NavHost(
-        navController = navController,
-        startDestination = "welcome"
-    ) {
+    // گرفتن مسیر (Route) فعلی
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
-        // ==========================================
-        // Welcome
-        // ==========================================
+    // لیست صفحاتی که باید BottomNavigation داشته باشند
+    val bottomBarRoutes = listOf(
+        Screen.Home.route,
+        Screen.Ingredient.route,
+        Screen.Setting.route
+    )
 
-        composable("welcome") {
-
-            WelcomeScreen(
-                isDark = isDarkTheme,
-
-                onGetStartedClick = {
-
-                    navController.navigate(
-                        Screen.Home.route
-                    ) {
-                        popUpTo(
-                            "welcome"
-                        ) {
-                            inclusive = true
-                        }
-                    }
-                },
-
-                onSignInClick = {}
-            )
+    Scaffold(
+        bottomBar = {
+            // ظهور نرم و یکدست BottomBar همزمان با بارگذاری صفحه
+            AnimatedVisibility(
+                visible = currentRoute in bottomBarRoutes,
+//                enter = fadeIn(animationSpec = tween(400)) + slideInVertically(initialOffsetY = { it }),
+//                exit = fadeOut(animationSpec = tween(300)) + slideOutVertically(targetOffsetY = { it })
+            ) {
+                GlassBottomNavigation(
+                    isDark = isDarkTheme,
+                    navController = navController
+                )
+            }
         }
+    ) { innerPadding ->
 
+        NavHost(
+            navController = navController,
+            startDestination = "welcome",
+            modifier = Modifier.consumeWindowInsets(innerPadding), // جلوگیری از رفتن محتوا زیر BottomNav
+            enterTransition = { fadeIn(animationSpec = tween(700)) },
+            exitTransition = { fadeOut(animationSpec = tween(700)) },
+            popEnterTransition = { fadeIn(animationSpec = tween(700)) },
+            popExitTransition = { fadeOut(animationSpec = tween(700)) }
+        ) {
 
-        // ==========================================
-        // Home / My Products
-        // ==========================================
-
-        composable(Screen.Home.route) {
-
-            val uiProducts = products.map { product ->
-                ProductUiModel(
-                    id = product.id,
-                    name = product.name,
-                    lastUpdated = product.lastUpdated,
-                    imageUrl = product.imageResId,
-                    cost = "$%.2f".format(product.cost),
-                    price = "$%.2f".format(product.price),
-//                    margin = "%.0f%%".format(product.margin)
+            // Welcome
+            composable("welcome") {
+                WelcomeScreen(
+                    isDark = isDarkTheme,
+                    onGetStartedClick = {
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo("welcome") { inclusive = true }
+                        }
+                    },
                 )
             }
 
-            MyProductsScreen(
-                isDark = isDarkTheme,
-                navController = navController,
-                products = uiProducts,
-                onProductClick = { product ->
-                    navController.navigate("ProductItem/${product.id}")
-                },
-                onAddClick = {
-                    navController.navigate("CreateRecipe")
-                },
-                onSearchClick = {},
-                onSortClick = {}
-            )
-        }
-
-
-        // ==========================================
-        // Product Detail
-        // ==========================================
-
-        composable("ProductItem/{productId}") { backStackEntry ->
-
-            val productId = backStackEntry.arguments
-                ?.getString("productId")
-                ?.toLongOrNull()
-                ?: return@composable
-
-            val productItemViewModel: ProductItemViewModel = viewModel(
-                factory = ProductItemViewModelFactory(
-                    repository = productItemRepository,
-                    productId = productId
+            // Home / My Products
+            composable(Screen.Home.route) {
+                MyProductsScreen(
+                    isDark = isDarkTheme,
+                    products = uiProducts,
+                    onProductClick = { product ->
+                        navController.navigate("ProductItem/${product.id}")
+                    },
                 )
-            )
+            }
 
-            ProductItemScreen(
-                isDark = isDarkTheme,
-                productItemViewModel = productItemViewModel,
-                onBack = {
-                    navController.popBackStack()
-                },
-                onEditIngredients = { id ->
-                    navController.navigate("CreateRecipe?productId=$id")
-                }
-            )
-        }
+            // Product Detail
+            composable("ProductItem/{productId}") { backStackEntry ->
+                val productId = backStackEntry.arguments
+                    ?.getString("productId")
+                    ?.toLongOrNull()
+                    ?: return@composable
 
+                val productItemViewModel: ProductItemViewModel = viewModel(
+                    factory = ProductItemViewModelFactory(
+                        repository = productItemRepository,
+                        productId = productId
+                    )
+                )
 
-        // ==========================================
-        // Create Product
-        // ==========================================
+                ProductItemScreen(
+                    isDark = isDarkTheme,
+                    productItemViewModel = productItemViewModel,
+                    onBack = { navController.popBackStack() },
+                    onEditIngredients = { id ->
+                        navController.navigate("CreateRecipe?productId=$id")
+                    }
+                )
+            }
 
-        // ==========================================
-// Create Product
-// ==========================================
+            // Create Product
+            composable(
+                route = "CreateRecipe?productId={productId}",
+                arguments = listOf(
+                    navArgument("productId") {
+                        type = NavType.LongType
+                        defaultValue = -1L
+                    }
+                )
+            ) { backStackEntry ->
+                val productId = backStackEntry.arguments
+                    ?.getLong("productId")
+                    ?.takeIf { it != -1L }
 
-        composable(
-            route = "CreateRecipe?productId={productId}",
-            arguments = listOf(
-                navArgument("productId") {
-                    type = NavType.LongType
-                    defaultValue = -1L
-                }
-            )
-        ) { backStackEntry ->
+                CreateRecipeScreen(
+                    isDark = isDarkTheme,
+                    ingredientViewModel = ingredientViewModel,
+                    createRecipeViewModel = createRecipeViewModel,
+                    productId = productId,
+                    onBack = { navController.popBackStack() },
+                    onSave = { navController.popBackStack() }
+                )
+            }
 
-            val productId = backStackEntry.arguments
-                ?.getLong("productId")
-                ?.takeIf { it != -1L }
+            // Ingredients
+            composable(Screen.Ingredient.route) {
+                MyIngredientsScreen(
+                    isDark = isDarkTheme,
+                    ingredientViewModel = ingredientViewModel
+                )
+            }
 
-            CreateRecipeScreen(
-                isDark = isDarkTheme,
-                ingredientViewModel = ingredientViewModel,
-                createRecipeViewModel = createRecipeViewModel,
-                productId = productId,
+            // Add Ingredient
+            composable("AddIngredient") {
+                AddIngredientScreen(
+                    isDark = isDarkTheme,
+                    ingredientViewModel = ingredientViewModel,
+                    onBack = { navController.popBackStack() },
+                    onSave = { navController.popBackStack() }
+                )
+            }
 
-                onBack = {
-                    navController.popBackStack()
-                },
-
-                onSave = {
-                    navController.popBackStack()
-                }
-            )
-        }
-
-
-        // ==========================================
-        // Ingredients
-        // ==========================================
-
-        composable(Screen.Ingredient.route) {
-            MyIngredientsScreen(
-                isDark = isDarkTheme,
-                navController = navController,
-                ingredientViewModel = ingredientViewModel
-            )
-        }
-
-
-        // ==========================================
-        // Add Ingredient
-        // ==========================================
-
-        composable("AddIngredient") {
-            AddIngredientScreen(
-                isDark = isDarkTheme,
-                ingredientViewModel = ingredientViewModel,
-                onBack = {
-                    navController.popBackStack()
-                },
-                onSave = {
-                    navController.popBackStack()
-                }
-            )
-        }
-
-
-        // ==========================================
-        // Settings
-        // ==========================================
-
-        composable(Screen.Setting.route) {
-
-            SettingsScreen(
-                isDark = isDarkTheme,
-
-                navController = navController,
-
-                onBack = {
-
-                    navController.popBackStack()
-                },
-
-                settingsViewModel = settingsViewModel,
-
-                onLanguageChanged = {
-//                    (context as? MainActivity)?.recreate()
-                }
-            )
+            // Settings
+            composable(Screen.Setting.route) {
+                SettingsScreen(
+                    isDark = isDarkTheme,
+                    onBack = { navController.popBackStack() },
+                    settingsViewModel = settingsViewModel,
+                    onLanguageChanged = {}
+                )
+            }
         }
     }
 }

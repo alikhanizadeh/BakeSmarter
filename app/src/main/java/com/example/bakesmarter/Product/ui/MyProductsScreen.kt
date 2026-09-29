@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -40,7 +41,6 @@ import com.example.bakesmarter.Product.FullScreenSearch
 import com.example.bakesmarter.Product.ProductUiModel
 import com.example.bakesmarter.R
 import com.example.bakesmarter.Product.ProductCard
-import com.example.bakesmarter.components.ButtonNavigation.BottomNav
 import com.example.bakesmarter.ui.theme.BackgroundDark
 import com.example.bakesmarter.ui.theme.BackgroundLight
 import com.example.bakesmarter.ui.theme.BakeSmarterTheme
@@ -54,19 +54,17 @@ import com.example.bakesmarter.ui.theme.TextLight
 @Composable
 fun MyProductsScreen(
     isDark: Boolean,
-    navController: NavController,
     products: List<ProductUiModel>,
     onProductClick: (ProductUiModel) -> Unit,
-    onAddClick: () -> Unit,
-    onSearchClick: () -> Unit,
-    onSortClick: () -> Unit
 ) {
     val background = if (isDark) BackgroundDark else BackgroundLight
     val textColor = if (isDark) TextDark else TextLight
     var showFullSearch by remember { mutableStateOf(false) }
 
+
     Box(
         modifier = Modifier.fillMaxSize()
+            .padding(top = 30.dp)
     ) {
 
         /* 🔹 Scaffold اصلی */
@@ -135,79 +133,10 @@ fun MyProductsScreen(
                     }
                 }
             }
-
-
-
         }
-
-
-            /* 🔹 Bottom Navigation شناور */
-            BottomNav(
-                isDark = isDark,
-                navController = navController,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 20.dp)
-            )
-
     }
 }
 
-
-@Preview(showBackground = true)
-@Composable
-fun Greeting() {
-    val navController = rememberNavController()
-    BakeSmarterTheme {
-        MyProductsScreen(
-            true,
-            navController = navController,
-            sampleProducts,
-            {},
-            {},
-            {},
-            {}
-        )
-    }
-}
-
-
-// لیست ایتم ها برای تست کد
-
-// داده‌های موقت برای تست UI
-// در مرحله Room این بخش به طور کامل حذف خواهد شد.
-val sampleProducts = listOf(
-
-    ProductUiModel(
-        id = 1L,
-        name = "Chocolate Croissant",
-        lastUpdated = "3",
-        imageUrl = R.drawable.imagewelcome,
-        cost = "$1.25",
-        price = "$4.50",
-//        margin = "72%"
-    ),
-
-    ProductUiModel(
-        id = 2L,
-        name = "Strawberry Tart",
-        lastUpdated = "2026-09-24 13:03",
-        imageUrl = R.drawable.imagecake1,
-        cost = "$2.10",
-        price = "$6.00",
-//        margin = "65%"
-    ),
-
-    ProductUiModel(
-        id = 3L,
-        name = "Assorted Macarons",
-        lastUpdated = "1",
-        imageUrl = R.drawable.imagecake2,
-        cost = "$0.45",
-        price = "$2.50",
-//        margin = "82%"
-    )
-)
 
 
 
